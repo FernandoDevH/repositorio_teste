@@ -640,12 +640,7 @@ body {
     margin-bottom: 3rem;
 }
 
-.contact-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: white;
-}
+
 
 /* Estilos para ícones clicáveis de contato */
 .contact-item a {
