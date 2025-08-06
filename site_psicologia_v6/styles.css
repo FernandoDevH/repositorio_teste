@@ -89,6 +89,10 @@ body {
     gap: 2rem;
 }
 
+.fa-eye{
+    color:#10b981!important;
+}
+
 /* Links de navegação */
 .nav-link {
     text-decoration: none;
