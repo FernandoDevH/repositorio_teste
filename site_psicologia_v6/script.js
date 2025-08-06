@@ -7,32 +7,6 @@
    NAVEGAÇÃO MOBILE - MENU HAMBÚRGUER
    ======================================== */
 
-/**
- * Funcionalidade do menu mobile responsivo
- * Controla a abertura e fechamento do menu hambúrguer em dispositivos móveis
- */
-
-// Seleção dos elementos do menu mobile usando getElementById para melhor performance
-const navToggle = document.getElementById('nav-toggle'); // Botão hambúrguer (3 barras)
-const navMenu = document.getElementById('nav-menu'); // Menu de navegação principal
-
-// Event listener para o botão hambúrguer - Executa quando o botão é clicado
-navToggle.addEventListener('click', () => {
-    // Alterna as classes CSS para mostrar/esconder o menu
-    // A classe 'active' controla a visibilidade e animação do menu
-    navMenu.classList.toggle('active'); // Mostra/esconde o menu
-    navToggle.classList.toggle('active'); // Anima o botão hambúrguer (transforma em X)
-});
-
-// Fecha o menu mobile automaticamente quando um link de navegação é clicado
-// Isso melhora a experiência do usuário em dispositivos móveis
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-        // Remove as classes 'active' para fechar o menu e resetar o botão
-        navMenu.classList.remove('active'); // Esconde o menu
-        navToggle.classList.remove('active'); // Volta o botão ao estado normal (3 barras)
-    });
-});
 
 /* ========================================
    FUNCIONALIDADE DO ACCORDION (MENU SANFONADO)
@@ -208,9 +182,11 @@ window.addEventListener('scroll', () => {
  */
 function animateCounter(element, target, suffix = '', prefix = '', duration = 2000) {
     let start = 0; // Valor inicial do contador
-    const increment = target / (duration / 16); // Incremento por frame (60fps)
+    const steps = 100; // Número de passos da animação
+    const increment = target / steps; // Incremento por passo
+    const stepDuration = duration / steps; // Duração de cada passo
     
-    // Timer que executa a cada 16ms (aproximadamente 60fps)
+    // Timer que executa a cada stepDuration
     const timer = setInterval(() => {
         start += increment; // Incrementa o valor
         
@@ -222,49 +198,35 @@ function animateCounter(element, target, suffix = '', prefix = '', duration = 20
             // Atualiza o texto com o valor atual (arredondado)
             element.textContent = prefix + Math.floor(start) + suffix;
         }
-    }, 16);
+    }, stepDuration);
 }
 
-/* ========================================
-   ANIMAÇÃO DE CONTADORES NUMÉRICOS
-   ======================================== */
 
-function animateCounter(element, target, prefix = '', suffix = '', duration = 2000) {
-    let start = 0;
-    const increment = target / (duration / 16);
 
-    const timer = setInterval(() => {
-        start += increment;
-        if (start >= target) {
-            clearInterval(timer);
-            element.textContent = prefix + target + suffix;
-        } else {
-            element.textContent = prefix + Math.floor(start) + suffix;
-        }
-    }, 16);
-}
-
-const heroObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const statNumbers = document.querySelectorAll('.stat-number');
-            statNumbers.forEach(stat => {
-                const target = parseInt(stat.dataset.target);
-                const prefix = stat.dataset.prefix || '';
-                const suffix = stat.dataset.suffix || '';
-                animateCounter(stat, target, prefix, suffix);
-            });
-            heroObserver.unobserve(entry.target);
+// Função alternativa para iniciar animação imediatamente
+function startHeroAnimation() {
+    const statNumbers = document.querySelectorAll('.stat-number');
+    
+    statNumbers.forEach(stat => {
+        const text = stat.textContent.trim();
+        
+        // Anima diferentes tipos de estatísticas
+        if (text === '17') {
+            // Reseta para 0 e anima o número de anos de experiência
+            stat.textContent = '0';
+            animateCounter(stat, 17);
+        } else if (text === 'R$ 800') {
+            // Reseta para R$ 0 e anima o valor monetário
+            stat.textContent = 'R$ 0';
+            animateCounter(stat, 800, '', 'R$ ');
+        } else if (text === '40k') {
+            // Reseta para 0 e anima o alcance
+            stat.textContent = '0';
+            animateCounter(stat, 40, 'k');
         }
     });
-}, { threshold: 0.5 });
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-    const heroSection = document.querySelector('.hero');
-    if (heroSection) {
-        heroObserver.observe(heroSection);
-    }
-});
 
 
 /* ========================================
@@ -287,8 +249,10 @@ function animateProjectionNumber(element, targetText, duration = 2000) {
         
         let currentStart = 0;
         let currentEnd = 0;
-        const incrementStart = startNum / (duration / 16);
-        const incrementEnd = endNum / (duration / 16);
+        const steps = 100;
+        const incrementStart = startNum / steps;
+        const incrementEnd = endNum / steps;
+        const stepDuration = duration / steps;
         
         const timer = setInterval(() => {
             currentStart += incrementStart;
@@ -302,11 +266,12 @@ function animateProjectionNumber(element, targetText, duration = 2000) {
                 const displayEnd = Math.floor(currentEnd);
                 element.textContent = `${displayStart}${suffix} - ${displayEnd}${suffix}`;
             }
-        }, 16);
+        }, stepDuration);
     } else {
         // Se não é um intervalo, usa a animação normal
         const num = parseInt(targetText);
         const suffix = targetText.replace(/\d/g, '');
+        element.textContent = '0' + suffix;
         animateCounter(element, num, suffix);
     }
 }
@@ -327,13 +292,42 @@ const projectionsObserver = new IntersectionObserver((entries) => {
             projectionsObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 0.3 }); // Ativa quando 30% da seção está visível
+}, { threshold: 0.1 }); // Reduzindo threshold para 10%
+
+// Função alternativa para iniciar animação das projeções
+function startProjectionsAnimation() {
+    const projectionNumbers = document.querySelectorAll('.projection-number');
+    
+    projectionNumbers.forEach(projection => {
+        const text = projection.textContent.trim();
+        
+        // Reseta o valor antes de animar
+        if (text.includes(' - ')) {
+            const parts = text.split(' - ');
+            const suffix = parts[1].replace(/\d/g, '');
+            projection.textContent = `0${suffix} - 0${suffix}`;
+        } else {
+            const suffix = text.replace(/\d/g, '');
+            projection.textContent = '0' + suffix;
+        }
+        
+        // Inicia a animação após um pequeno delay
+        setTimeout(() => {
+            animateProjectionNumber(projection, text);
+        }, 100);
+    });
+}
 
 // Inicia a observação da seção de projeções quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', () => {
     const projectionsSection = document.querySelector('.projections');
     if (projectionsSection) {
         projectionsObserver.observe(projectionsSection);
+        
+        // Também inicia a animação após um delay como fallback
+        setTimeout(() => {
+            startProjectionsAnimation();
+        }, 2000);
     }
 });
 
@@ -542,3 +536,43 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+/* ========================================
+   ANIMAÇÃO DE CONTADORES NUMÉRICOS
+   ======================================== */
+
+function animateCounter(element, target, prefix = '', suffix = '', duration = 2000) {
+    let start = 0;
+    const increment = target / (duration / 16);
+
+    const timer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+            clearInterval(timer);
+            element.textContent = prefix + target + suffix;
+        } else {
+            element.textContent = prefix + Math.floor(start) + suffix;
+        }
+    }, 16);
+}
+
+const heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.dataset.target);
+                const prefix = stat.dataset.prefix || '';
+                const suffix = stat.dataset.suffix || '';
+                animateCounter(stat, target, prefix, suffix);
+            });
+            heroObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.5 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const heroSection = document.querySelector('.hero');
+    if (heroSection) {
+        heroObserver.observe(heroSection);
+    }
+});

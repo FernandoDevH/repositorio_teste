@@ -382,6 +382,11 @@ body {
     font-weight: bold;
     font-size: 1.2rem;
 }
+.analysis-section .red::before  {
+    
+    color: #f70000;
+    
+}
 
 .analysis-section p {
     color: #64748b;
