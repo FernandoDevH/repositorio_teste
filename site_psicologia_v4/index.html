@@ -1,35 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- ========================================
+         META TAGS E CONFIGURAÇÕES BÁSICAS
+         ======================================== -->
+    
     <!-- Meta tags básicas para configuração da página -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@linkpsicologia - Proposta Interativa</title>
+    <meta charset="UTF-8"> <!-- Define a codificação de caracteres como UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configuração para responsividade mobile -->
+    <title>@linkpsicologia - Proposta Interativa</title> <!-- Título da página exibido na aba do navegador -->
+    
+    <!-- ========================================
+         IMPORTAÇÃO DE ESTILOS E FONTES
+         ======================================== -->
     
     <!-- Importação dos estilos CSS personalizados -->
     <link rel="stylesheet" href="styles.css">
     
-    <!-- Fonte Google Fonts - Inter para tipografia moderna -->
+    <!-- Fonte Google Fonts - Inter para tipografia moderna e legível -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome para ícones -->
+    <!-- Font Awesome para ícones - Versão 6.4.0 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Script JavaScript para funcionalidades interativas -->
+    <!-- Font Awesome adicional - Versão 6.5.0 para garantir compatibilidade com ícones mais recentes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-yU7mHn0+9TVcRQZJK3kXmWGHYdYmQ8X6G0XxKv9kNiyuLlRbeD7TeMCKkS28EzhtUsx0fp2/c3PtK+6mJw5ewA==" crossorigin="anonymous" referrerpolicy="no-referrer"
+  />
+
+    <!-- Script JavaScript para funcionalidades interativas - Carregado no head para garantir disponibilidade -->
     <script src="script.js"></script>
 </head>
 <body>
-    <!-- Header fixo com navegação principal -->
+    <!-- ========================================
+         HEADER E NAVEGAÇÃO PRINCIPAL
+         ======================================== -->
+    
+    <!-- Header fixo no topo da página com navegação principal -->
     <header class="header">
         <nav class="nav">
             <div class="nav-container">
-                <!-- Logo/marca da @linkpsicologia -->
-                <div class="nav-logo">
-                    <i class="fas fa-brain"></i>
-                    <span>@linkpsicologia</span>
-                </div>
+                <!-- Logo/marca da @linkpsicologia - Link clicável para o topo da página -->
+                <a href="#apresentacao" class="nav-logo">
+                    <i class="fas fa-brain"></i> <!-- Ícone de cérebro representando psicologia -->
+                    <span>@linkpsicologia</span> <!-- Nome da marca -->
+                </a>
                 
-                <!-- Menu de navegação principal -->
+                <!-- Menu de navegação principal - Links para seções da página -->
                 <ul class="nav-menu" id="nav-menu">
                     <li><a href="#apresentacao" class="nav-link">Apresentação</a></li>
                     <li><a href="#concorrentes" class="nav-link">Análise</a></li>
@@ -39,7 +55,7 @@
                     <li><a href="#contato" class="nav-link">Contato</a></li>
                 </ul>
                 
-                <!-- Botão hambúrguer para menu mobile -->
+                <!-- Botão hambúrguer para menu mobile - Três barras horizontais -->
                 <div class="nav-toggle" id="nav-toggle">
                     <span class="bar"></span>
                     <span class="bar"></span>
@@ -49,9 +65,21 @@
         </nav>
     </header>
 
-    <!-- Seção Hero - Banner principal com título e estatísticas -->
-    <!-- ...existing code... -->
-<div class="hero-stats">
+    <!-- ========================================
+         SEÇÃO HERO - BANNER PRINCIPAL
+         ======================================== -->
+    
+    <!-- Seção Hero - Banner principal com título, subtítulo e estatísticas em destaque -->
+    <section id="apresentacao" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <!-- Título principal da proposta - Destaque visual da página -->
+                <h1 class="hero-title">Proposta Interativa para @linkpsicologia</h1>
+                <!-- Subtítulo explicativo sobre o posicionamento da marca -->
+                <p class="hero-subtitle">Uma referência em psicologia infantil e atendimento a crianças com autismo em Belo Horizonte</p>
+                
+                <!-- Estatísticas em destaque - Números importantes para credibilidade -->
+                <div class="hero-stats">
     <div class="stat">
         <span class="stat-number" data-target="17">0</span>
         <span class="stat-label">Anos de Experiência</span>
@@ -65,33 +93,39 @@
         <span class="stat-label">Alcance Estimado</span>
     </div>
 </div>
-<!-- ...existing code... -->
+            </div>
+        </div>
+    </section>
 
+    <!-- ========================================
+         SEÇÃO DE APRESENTAÇÃO
+         ======================================== -->
+    
     <!-- Seção de Apresentação - Contexto e informações sobre a @linkpsicologia -->
     <section class="section">
         <div class="container">
             <div class="content-card">
                 <h2 class="section-title">Apresentação da @linkpsicologia e Contexto do Mercado</h2>
                 
-                <!-- Grid com 3 cards informativos -->
+                <!-- Grid com 3 cards informativos sobre a essência da marca -->
                 <div class="content-grid">
-                    <!-- Card 1: Nossa Essência -->
+                    <!-- Card 1: Nossa Essência - Apresentação da marca e histórico -->
                     <div class="content-item">
-                        <i class="fas fa-heart icon"></i>
+                        <i class="fas fa-heart icon"></i> <!-- Ícone de coração representando cuidado -->
                         <h3>Nossa Essência</h3>
                         <p>Bem-vinda à proposta interativa desenvolvida para a @linkpsicologia, uma referência em psicologia infantil e atendimento a crianças com autismo em Belo Horizonte. Com 17 anos de experiência, a psicóloga Natália e sua equipe têm construído um legado de cuidado, desenvolvimento e inclusão.</p>
                     </div>
                     
-                    <!-- Card 2: Objetivo Principal -->
+                    <!-- Card 2: Objetivo Principal - Meta de crescimento e expansão -->
                     <div class="content-item">
-                        <i class="fas fa-target icon"></i>
+                        <i class="fa-solid fa-bullseye icon"></i> <!-- Ícone de alvo representando objetivo -->
                         <h3>Objetivo Principal</h3>
                         <p>O objetivo principal é aumentar o número de pacientes e terapeutas, expandindo o impacto da @linkpsicologia na comunidade. Para isso, é fundamental otimizar a presença online, qualificando leads e estabelecendo um fluxo contínuo de aquisição.</p>
                     </div>
                     
-                    <!-- Card 3: Tom de Comunicação -->
+                    <!-- Card 3: Tom de Comunicação - Diretrizes para a linguagem da marca -->
                     <div class="content-item">
-                        <i class="fas fa-comments icon"></i>
+                        <i class="fas fa-comments icon"></i> <!-- Ícone de comentários representando comunicação -->
                         <h3>Tom de Comunicação</h3>
                         <p>Com base na sua essência, a comunicação da @linkpsicologia será sempre acolhedora e instrutiva. Buscamos transmitir movimento, crescimento e clareza sobre os serviços oferecidos.</p>
                     </div>
@@ -100,13 +134,17 @@
         </div>
     </section>
 
-    <!-- Seção de Análise de Concorrentes - Menu sanfonado (accordion) -->
+    <!-- ========================================
+         SEÇÃO DE ANÁLISE DE CONCORRENTES
+         ======================================== -->
+    
+    <!-- Seção de Análise de Concorrentes - Menu sanfonado (accordion) para organizar informações -->
     <section id="concorrentes" class="section bg-light">
         <div class="container">
             <h2 class="section-title">Análise de Concorrentes</h2>
             <p class="section-subtitle">Análise detalhada dos principais concorrentes da @linkpsicologia em Belo Horizonte</p>
             
-            <!-- Container do accordion com 5 concorrentes -->
+            <!-- Container do accordion com 5 concorrentes principais -->
             <div class="accordion">
                 <!-- Item 1: Clínica Bambolê -->
                 <div class="accordion-item">
@@ -385,59 +423,78 @@
     </section>
 
     <!-- Contato -->
+    <!-- ========================================
+         SEÇÃO DE CONTATO
+         ======================================== -->
+    
+    <!-- Seção de Contato - Informações para comunicação e call-to-action -->
     <section id="contato" class="section bg-gradient">
         <div class="container">
             <h2 class="section-title white">Vamos Conversar!</h2>
             <p class="section-subtitle white">Estamos à disposição para construir juntos o futuro da @linkpsicologia!</p>
             
+            <!-- Informações de contato - E-mail e WhatsApp com links clicáveis -->
             <div class="contact-info">
+                <!-- Item de contato E-mail - Ícone e link clicável -->
                 <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:analuizacunhagt@gmail.com" title="Enviar e-mail">
+                        <i class="fas fa-envelope"></i> <!-- Ícone de envelope para e-mail -->
+                    </a>
                     <div>
                         <h3>E-mail</h3>
                         <a href="mailto:analuizacunhagt@gmail.com">analuizacunhagt@gmail.com</a>
                     </div>
                 </div>
                 
+                <!-- Item de contato WhatsApp - Ícone e link clicável -->
                 <div class="contact-item">
-                    <i class="fas fa-phone"></i>
+                    <a href="https://wa.me/5531999347385?text=Olá! Gostaria de saber mais sobre a proposta da @linkpsicologia" 
+                       target="_blank" 
+                       title="Falar no WhatsApp">
+                        <i class="fab fa-whatsapp"></i> <!-- Ícone do WhatsApp -->
+                    </a>
                     <div>
-                        <h3>Celular</h3>
+                        <h3>WhatsApp</h3>
                         <a href="https://wa.me/5531999347385?text=Olá! Gostaria de saber mais sobre a proposta da @linkpsicologia" 
-       target="_blank" 
-       title="Falar no WhatsApp">(31) 99934-7385</a>
+                           target="_blank" 
+                           title="Falar no WhatsApp">(31) 99934-7385</a>
                     </div>
                 </div>
             </div>
             
+            <!-- Seção de call-to-action - Botão principal para contato -->
             <div class="cta-section">
                 <a href="https://wa.me/5531999347385?text=Olá! Gostaria de saber mais sobre a proposta da @linkpsicologia" 
-       target="_blank" 
-       title="Falar no WhatsApp" class="cta-button">
-                    <i class="fas fa-paper-plane"></i>
+                   target="_blank" 
+                   title="Falar no WhatsApp" class="cta-button">
+                    <i class="fas fa-paper-plane"></i> <!-- Ícone de avião de papel -->
                     Entrar em Contato
                 </a>
             </div>
         </div>
     </section>
-<a href="https://wa.me/5531999347385?text=Olá! Gostaria de saber mais sobre a proposta da @linkpsicologia" 
-       target="_blank" 
-       title="Falar no WhatsApp">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-    <!-- Footer -->
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    
+    <!-- Footer - Rodapé com informações de copyright -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2024 @linkpsicologia - Proposta Interativa. Todos os direitos reservados.</p>
         </div>
     </footer>
 
-    <!-- Botão flutuante do WhatsApp -->
+    <!-- ========================================
+         BOTÃO FLUTUANTE DO WHATSAPP
+         ======================================== -->
+    
+    <!-- Botão flutuante do WhatsApp - Fixo no canto inferior direito para acesso rápido -->
     <a href="https://wa.me/5531999347385?text=Olá! Gostaria de saber mais sobre a proposta da @linkpsicologia" 
        class="whatsapp-float" 
        target="_blank" 
        title="Falar no WhatsApp">
-        <i class="fab fa-whatsapp"></i>
+        <i class="fab fa-whatsapp"></i> <!-- Ícone do WhatsApp -->
     </a>
 
     
