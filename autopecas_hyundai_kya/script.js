@@ -1,465 +1,344 @@
-/* ========================================
-   SCRIPT JAVASCRIPT - AUTOPEÇAS HYUNDAI KIA BH
-   Arquivo responsável por todas as funcionalidades interativas do site
-   ======================================== */
+// ========================================
+// FUNCIONALIDADES INTERATIVAS
+// ========================================
 
-/* ========================================
-   NAVEGAÇÃO MOBILE - MENU HAMBÚRGUER
-   ======================================== */
+// Aguarda o carregamento completo do DOM
+document.addEventListener("DOMContentLoaded", () => {
+  // ========================================
+  // NAVEGAÇÃO MOBILE
+  // ========================================
 
-/**
- * Inicialização do menu mobile quando o DOM estiver carregado
- */
-document.addEventListener('DOMContentLoaded', function() {
-    // Seleciona elementos do menu mobile
-    const navToggle = document.getElementById('nav-toggle');
-    const navMenu = document.getElementById('nav-menu');
-    
-    // Adiciona evento de clique no botão hambúrguer
-    if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function() {
-            // Alterna a classe 'active' no menu
-            navMenu.classList.toggle('active');
-            
-            // Anima as barras do hambúrguer
-            const bars = navToggle.querySelectorAll('.bar');
-            bars.forEach((bar, index) => {
-                if (navMenu.classList.contains('active')) {
-                    // Transforma em X
-                    if (index === 0) bar.style.transform = 'rotate(45deg) translate(5px, 5px)';
-                    if (index === 1) bar.style.opacity = '0';
-                    if (index === 2) bar.style.transform = 'rotate(-45deg) translate(7px, -6px)';
-                } else {
-                    // Volta ao estado normal
-                    bar.style.transform = 'none';
-                    bar.style.opacity = '1';
-                }
-            });
-        });
-        
-        // Fecha o menu ao clicar em um link (mobile)
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-                // Reseta as barras do hambúrguer
-                const bars = navToggle.querySelectorAll('.bar');
-                bars.forEach(bar => {
-                    bar.style.transform = 'none';
-                    bar.style.opacity = '1';
-                });
-            });
-        });
+  const navToggle = document.getElementById("nav-toggle")
+  const navMenu = document.getElementById("nav-menu")
+
+  if (navToggle && navMenu) {
+    navToggle.addEventListener("click", () => {
+      navMenu.classList.toggle("active")
+    })
+
+    // Fecha o menu ao clicar em um link
+    const navLinks = document.querySelectorAll(".nav-link")
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        navMenu.classList.remove("active")
+      })
+    })
+  }
+
+  // ========================================
+  // ANIMAÇÃO DOS NÚMEROS (COUNTER)
+  // ========================================
+
+  function animateCounter(element, target, duration = 2000) {
+    const start = 0
+    const increment = target / (duration / 16)
+    let current = start
+
+    const timer = setInterval(() => {
+      current += increment
+      if (current >= target) {
+        current = target
+        clearInterval(timer)
+      }
+
+      const prefix = element.dataset.prefix || ""
+      const suffix = element.dataset.suffix || ""
+
+      if (target >= 1000) {
+        element.textContent = prefix + Math.floor(current / 1000) + "k" + suffix
+      } else {
+        element.textContent = prefix + Math.floor(current) + suffix
+      }
+    }, 16)
+  }
+
+  // Observador para animar números quando entram na tela
+  const observerOptions = {
+    threshold: 0.5,
+    rootMargin: "0px 0px -100px 0px",
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const element = entry.target
+        const target = Number.parseInt(element.dataset.target)
+        animateCounter(element, target)
+        observer.unobserve(element)
+      }
+    })
+  }, observerOptions)
+
+  // Observa todos os elementos com data-target
+  document.querySelectorAll("[data-target]").forEach((el) => {
+    observer.observe(el)
+  })
+
+  // ========================================
+  // GRÁFICO DE PROJEÇÃO
+  // ========================================
+
+  const canvas = document.getElementById("projectionChart")
+  if (canvas) {
+    const ctx = canvas.getContext("2d")
+
+    // Dados do gráfico
+    const data = {
+      labels: ["Mês 1", "Mês 2", "Mês 3", "Mês 4", "Mês 5", "Mês 6"],
+      datasets: [
+        {
+          label: "Leads Qualificados",
+          data: [15, 25, 35, 45, 55, 65],
+          borderColor: "#2563eb",
+          backgroundColor: "rgba(37, 99, 235, 0.1)",
+          tension: 0.4,
+          fill: true,
+        },
+        {
+          label: "Conversões",
+          data: [3, 6, 10, 15, 22, 30],
+          borderColor: "#10b981",
+          backgroundColor: "rgba(16, 185, 129, 0.1)",
+          tension: 0.4,
+          fill: true,
+        },
+      ],
     }
-    
-    // Inicializa outras funcionalidades
-    initScrollAnimations();
-    initContactForm();
-    initStatCounters();
-});
 
-/* ========================================
-   FUNCIONALIDADE DO ACCORDION (MENU SANFONADO)
-   ======================================== */
+    // Configuração do gráfico
+    const config = {
+      type: "line",
+      data: data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "top",
+          },
+          title: {
+            display: true,
+            text: "Projeção de Resultados - 6 Meses",
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: "rgba(0, 0, 0, 0.1)",
+            },
+          },
+          x: {
+            grid: {
+              color: "rgba(0, 0, 0, 0.1)",
+            },
+          },
+        },
+      },
+    }
 
-/**
- * Função para alternar a abertura/fechamento dos itens do accordion
- * Utilizada na seção de análise de concorrentes para organizar o conteúdo
- * @param {HTMLElement} element - O elemento header clicado (cabeçalho do accordion)
- */
+    // Desenha o gráfico manualmente (versão simplificada)
+    drawSimpleChart(ctx, canvas.width, canvas.height)
+  }
+
+  // ========================================
+  // SCROLL SUAVE PARA SEÇÕES
+  // ========================================
+
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      e.preventDefault()
+      const target = document.querySelector(this.getAttribute("href"))
+      if (target) {
+        const headerHeight = document.querySelector(".header").offsetHeight
+        const targetPosition = target.offsetTop - headerHeight - 20
+
+        window.scrollTo({
+          top: targetPosition,
+          behavior: "smooth",
+        })
+      }
+    })
+  })
+
+  // ========================================
+  // EFEITO PARALLAX NO HERO
+  // ========================================
+
+  window.addEventListener("scroll", () => {
+    const scrolled = window.pageYOffset
+    const hero = document.querySelector(".hero")
+    if (hero) {
+      hero.style.transform = `translateY(${scrolled * 0.5}px)`
+    }
+  })
+})
+
+// ========================================
+// FUNÇÃO PARA ACCORDION
+// ========================================
+
 function toggleAccordion(element) {
-    // Obtém o item pai do accordion (div que contém header + content)
-    const accordionItem = element.parentElement;
-    
-    // Verifica se o item atual já está ativo (aberto)
-    const isActive = accordionItem.classList.contains('active');
-    
-    // Fecha todos os itens do accordion antes de abrir o selecionado
-    // Isso garante que apenas um item fique aberto por vez
-    document.querySelectorAll('.accordion-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Abre o item clicado apenas se não estava ativo anteriormente
-    // Se já estava aberto, permanece fechado (comportamento toggle)
-    if (!isActive) {
-        accordionItem.classList.add('active');
+  const accordionItem = element.parentElement
+  const content = accordionItem.querySelector(".accordion-content")
+  const icon = element.querySelector(".accordion-icon")
+
+  // Fecha todos os outros accordions
+  document.querySelectorAll(".accordion-item").forEach((item) => {
+    if (item !== accordionItem) {
+      item.classList.remove("active")
     }
+  })
+
+  // Toggle do accordion atual
+  accordionItem.classList.toggle("active")
 }
 
-/* ========================================
-   SCROLL SUAVE PARA NAVEGAÇÃO ÂNCORA
-   ======================================== */
+// ========================================
+// FUNÇÃO PARA DESENHAR GRÁFICO SIMPLES
+// ========================================
 
-/**
- * Implementa scroll suave para todos os links âncora da página
- * Melhora a experiência de navegação entre seções
- */
+function drawSimpleChart(ctx, width, height) {
+  // Limpa o canvas
+  ctx.clearRect(0, 0, width, height)
 
-// Seleciona todos os links que começam com "#" (links âncora)
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault(); // Previne o comportamento padrão do link
-        
-        // Obtém o ID da seção de destino
-        const targetId = this.getAttribute('href');
-        const targetSection = document.querySelector(targetId);
-        
-        // Verifica se a seção existe antes de fazer o scroll
-        if (targetSection) {
-            // Calcula a posição considerando o header fixo
-            const headerHeight = document.querySelector('.header').offsetHeight;
-            const targetPosition = targetSection.offsetTop - headerHeight - 20;
-            
-            // Executa o scroll suave
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
-    });
-});
+  // Configurações
+  const padding = 60
+  const chartWidth = width - padding * 2
+  const chartHeight = height - padding * 2
 
-/* ========================================
-   ANIMAÇÕES DE SCROLL
-   ======================================== */
+  // Dados
+  const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"]
+  const leads = [15, 25, 35, 45, 55, 65]
+  const conversions = [3, 6, 10, 15, 22, 30]
 
-/**
- * Inicializa animações que são ativadas durante o scroll
- */
-function initScrollAnimations() {
-    // Observador de interseção para animações de entrada
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    // Aplica animação a elementos específicos
-    const animatedElements = document.querySelectorAll('.content-item, .suggestion-item, .strategy-item, .target-item, .value-item');
-    animatedElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
+  // Desenha os eixos
+  ctx.strokeStyle = "#e5e7eb"
+  ctx.lineWidth = 1
+
+  // Eixo X
+  ctx.beginPath()
+  ctx.moveTo(padding, height - padding)
+  ctx.lineTo(width - padding, height - padding)
+  ctx.stroke()
+
+  // Eixo Y
+  ctx.beginPath()
+  ctx.moveTo(padding, padding)
+  ctx.lineTo(padding, height - padding)
+  ctx.stroke()
+
+  // Desenha as linhas dos dados
+  const stepX = chartWidth / (months.length - 1)
+  const maxValue = Math.max(...leads)
+
+  // Linha de Leads
+  ctx.strokeStyle = "#2563eb"
+  ctx.lineWidth = 3
+  ctx.beginPath()
+
+  leads.forEach((value, index) => {
+    const x = padding + index * stepX
+    const y = height - padding - (value / maxValue) * chartHeight
+
+    if (index === 0) {
+      ctx.moveTo(x, y)
+    } else {
+      ctx.lineTo(x, y)
+    }
+  })
+  ctx.stroke()
+
+  // Linha de Conversões
+  ctx.strokeStyle = "#10b981"
+  ctx.lineWidth = 3
+  ctx.beginPath()
+
+  conversions.forEach((value, index) => {
+    const x = padding + index * stepX
+    const y = height - padding - (value / maxValue) * chartHeight
+
+    if (index === 0) {
+      ctx.moveTo(x, y)
+    } else {
+      ctx.lineTo(x, y)
+    }
+  })
+  ctx.stroke()
+
+  // Adiciona pontos
+  leads.forEach((value, index) => {
+    const x = padding + index * stepX
+    const y = height - padding - (value / maxValue) * chartHeight
+
+    ctx.fillStyle = "#2563eb"
+    ctx.beginPath()
+    ctx.arc(x, y, 4, 0, 2 * Math.PI)
+    ctx.fill()
+  })
+
+  conversions.forEach((value, index) => {
+    const x = padding + index * stepX
+    const y = height - padding - (value / maxValue) * chartHeight
+
+    ctx.fillStyle = "#10b981"
+    ctx.beginPath()
+    ctx.arc(x, y, 4, 0, 2 * Math.PI)
+    ctx.fill()
+  })
+
+  // Adiciona labels dos meses
+  ctx.fillStyle = "#6b7280"
+  ctx.font = "12px Inter"
+  ctx.textAlign = "center"
+
+  months.forEach((month, index) => {
+    const x = padding + index * stepX
+    const y = height - padding + 20
+    ctx.fillText(month, x, y)
+  })
+
+  // Legenda
+  ctx.textAlign = "left"
+  ctx.fillStyle = "#2563eb"
+  ctx.fillRect(padding, 20, 15, 3)
+  ctx.fillStyle = "#1f2937"
+  ctx.fillText("Leads Qualificados", padding + 25, 30)
+
+  ctx.fillStyle = "#10b981"
+  ctx.fillRect(padding + 150, 20, 15, 3)
+  ctx.fillStyle = "#1f2937"
+  ctx.fillText("Conversões", padding + 175, 30)
 }
 
-/* ========================================
-   CONTADORES ANIMADOS DAS ESTATÍSTICAS
-   ======================================== */
+// ========================================
+// ANIMAÇÕES DE ENTRADA
+// ========================================
 
-/**
- * Inicializa os contadores animados na seção hero
- */
-function initStatCounters() {
-    const statNumbers = document.querySelectorAll('.stat-number');
-    
-    const animateCounter = (element) => {
-        const target = parseInt(element.getAttribute('data-target'));
-        const prefix = element.getAttribute('data-prefix') || '';
-        const suffix = element.getAttribute('data-suffix') || '';
-        const duration = 2000; // 2 segundos
-        const increment = target / (duration / 16); // 60 FPS
-        let current = 0;
-        
-        const updateCounter = () => {
-            current += increment;
-            if (current < target) {
-                element.textContent = prefix + Math.floor(current) + suffix;
-                requestAnimationFrame(updateCounter);
-            } else {
-                element.textContent = prefix + target + suffix;
-            }
-        };
-        
-        updateCounter();
-    };
-    
-    // Observador para iniciar animação quando a seção hero estiver visível
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const statNumber = entry.target;
-                animateCounter(statNumber);
-                counterObserver.unobserve(statNumber); // Anima apenas uma vez
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    statNumbers.forEach(stat => {
-        counterObserver.observe(stat);
-    });
-}
+// Observador para animações de entrada
+const fadeInObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = "1"
+        entry.target.style.transform = "translateY(0)"
+      }
+    })
+  },
+  {
+    threshold: 0.1,
+    rootMargin: "0px 0px -50px 0px",
+  },
+)
 
-/* ========================================
-   FORMULÁRIO DE CONTATO
-   ======================================== */
+// Aplica animação a elementos específicos
+document.addEventListener("DOMContentLoaded", () => {
+  const animatedElements = document.querySelectorAll(".metric-card, .differential-item, .funnel-stage, .timeline-item")
 
-/**
- * Inicializa o formulário de contato com validação e envio
- */
-function initContactForm() {
-    const contactForm = document.getElementById('contact-form');
-    
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Coleta dados do formulário
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                message: document.getElementById('message').value
-            };
-            
-            // Validação básica
-            if (!formData.name || !formData.email || !formData.phone || !formData.message) {
-                showNotification('Por favor, preencha todos os campos.', 'error');
-                return;
-            }
-            
-            // Validação de email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(formData.email)) {
-                showNotification('Por favor, insira um e-mail válido.', 'error');
-                return;
-            }
-            
-            // Simula envio do formulário
-            showNotification('Solicitação enviada com sucesso! Entraremos em contato em breve.', 'success');
-            
-            // Limpa o formulário
-            contactForm.reset();
-            
-            // Em um ambiente real, aqui seria feita a integração com um serviço de email
-            // ou API para processar o formulário
-        });
-    }
-}
-
-/* ========================================
-   SISTEMA DE NOTIFICAÇÕES
-   ======================================== */
-
-/**
- * Exibe notificações para o usuário
- * @param {string} message - Mensagem a ser exibida
- * @param {string} type - Tipo da notificação ('success', 'error', 'info')
- */
-function showNotification(message, type = 'info') {
-    // Remove notificação existente se houver
-    const existingNotification = document.querySelector('.notification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
-    
-    // Cria elemento de notificação
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <span class="notification-message">${message}</span>
-            <button class="notification-close">&times;</button>
-        </div>
-    `;
-    
-    // Adiciona estilos
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        z-index: 1001;
-        max-width: 400px;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-    `;
-    
-    // Adiciona ao DOM
-    document.body.appendChild(notification);
-    
-    // Anima entrada
-    setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-    }, 100);
-    
-    // Adiciona evento de fechar
-    const closeBtn = notification.querySelector('.notification-close');
-    closeBtn.addEventListener('click', () => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => notification.remove(), 300);
-    });
-    
-    // Remove automaticamente após 5 segundos
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => notification.remove(), 300);
-        }
-    }, 5000);
-}
-
-/* ========================================
-   EFEITOS DE HOVER E INTERATIVIDADE
-   ======================================== */
-
-/**
- * Adiciona efeitos de hover personalizados
- */
-document.addEventListener('DOMContentLoaded', function() {
-    // Efeito de paralaxe sutil no hero
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const hero = document.querySelector('.hero');
-        if (hero) {
-            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-        }
-    });
-    
-    // Efeito de hover nos cards
-    const cards = document.querySelectorAll('.content-item, .suggestion-item, .strategy-item, .target-item, .value-item');
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-10px) scale(1.02)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-});
-
-/* ========================================
-   INTEGRAÇÃO COM WHATSAPP
-   ======================================== */
-
-/**
- * Funcionalidade para o botão flutuante do WhatsApp
- */
-document.addEventListener('DOMContentLoaded', function() {
-    const whatsappButton = document.querySelector('.whatsapp-float');
-    
-    if (whatsappButton) {
-        // Adiciona animação de pulso
-        setInterval(() => {
-            whatsappButton.style.animation = 'pulse 1s ease-in-out';
-            setTimeout(() => {
-                whatsappButton.style.animation = '';
-            }, 1000);
-        }, 5000);
-        
-        // Adiciona evento de clique com tracking (opcional)
-        whatsappButton.addEventListener('click', function() {
-            // Aqui pode ser adicionado tracking de conversão
-            console.log('WhatsApp button clicked');
-        });
-    }
-});
-
-/* ========================================
-   OTIMIZAÇÕES DE PERFORMANCE
-   ======================================== */
-
-/**
- * Lazy loading para imagens (quando implementadas)
- */
-function initLazyLoading() {
-    const images = document.querySelectorAll('img[data-src]');
-    
-    const imageObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.classList.remove('lazy');
-                imageObserver.unobserve(img);
-            }
-        });
-    });
-    
-    images.forEach(img => imageObserver.observe(img));
-}
-
-/* ========================================
-   ANALYTICS E TRACKING (PLACEHOLDER)
-   ======================================== */
-
-/**
- * Funções para tracking de eventos (a serem implementadas conforme necessário)
- */
-function trackEvent(eventName, eventData = {}) {
-    // Placeholder para integração com Google Analytics, Facebook Pixel, etc.
-    console.log('Event tracked:', eventName, eventData);
-    
-    // Exemplo de implementação:
-    // gtag('event', eventName, eventData);
-    // fbq('track', eventName, eventData);
-}
-
-// Tracking de cliques em CTAs
-document.addEventListener('DOMContentLoaded', function() {
-    const ctaButtons = document.querySelectorAll('.btn');
-    ctaButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            trackEvent('cta_click', {
-                button_text: this.textContent.trim(),
-                button_location: this.closest('section')?.id || 'unknown'
-            });
-        });
-    });
-});
-
-/* ========================================
-   CSS ADICIONAL VIA JAVASCRIPT
-   ======================================== */
-
-// Adiciona estilos para animação de pulso do WhatsApp
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
-    
-    .notification-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-    }
-    
-    .notification-close {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 0;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .notification-close:hover {
-        opacity: 0.7;
-    }
-`;
-document.head.appendChild(style);
-
+  animatedElements.forEach((el) => {
+    el.style.opacity = "0"
+    el.style.transform = "translateY(30px)"
+    el.style.transition = "opacity 0.6s ease, transform 0.6s ease"
+    fadeInObserver.observe(el)
+  })
+})
